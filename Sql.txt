@@ -1,0 +1,40 @@
+CREATE demo charset=utf8;
+USE demo
+CREATE TABLE `stu`  (
+  `sno` int(100) UNSIGNED NOT NULL,
+  `sname` varchar(20) NOT NULL,
+  `sex` char(1) NOT NULL,
+  `birth` date NOT NULL,
+  `height` decimal(4, 1) NOT NULL,
+  `weight` decimal(4, 1) NOT NULL,
+  `score` decimal(4, 1) NOT NULL,
+  `cno` int(100) NULL,
+  PRIMARY KEY (`sno`)
+);
+CREATE TABLE `class`  (
+  `cno` int(100) NOT NULL,
+  `cname` varchar(20) NOT NULL,
+  `teacher` varchar(20) NOT NULL,
+  PRIMARY KEY (`cno`)
+);
+CREATE TABLE `bmi`  (
+  `id` int(100) NOT NULL,
+  `bname` varchar(20) NOT NULL,
+  `lval` decimal(4, 2) NOT NULL,
+  `hval` decimal(4, 2) NOT NULL,
+  `sex` char(1) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+1.显示stu表中考分最高的3名学生
+select * from stu where cno is not null order by cno asc,score desc LIMIT 3
+2.找出已分班学生中，哪些班学生的平均身高超过175，列出其班号和人数 
+select cno,count(*) from stu where cno is not null group by cno having avg(height)>175;
+3.统计1班的人数，列出班号和人数
+Select cno,count(cno) FROM stu where cno=1;
+4.查询学生表中哪些人的体重比张飞重？ 
+select * from stu where weight>(select weight from stu where name="张飞");
+5.2班3班中哪些同学的身高比1班的平均身高要高？
+select * from stu where cno in (2,3) and height>(select avg(height) from stu where cno=1);
+6.补充题目
+select name from (select name,min(score) from edu_app_xs_score group by name having min(score)>80) stu;
